@@ -52,7 +52,7 @@ const char *crypto_sign_primitive(void);
 SODIUM_EXPORT
 int map_ristretto_prime_subgroup(
         unsigned char *ge25519_point,
-        unsigned char *ristretto255_point
+        const unsigned char *ristretto255_point
 );
 
 SODIUM_EXPORT
@@ -90,7 +90,7 @@ int crypto_sign_verify_detached(const unsigned char *sig,
 SODIUM_EXPORT
 int crypto_sign_map_ristretto_prime_subgroup(
         unsigned char *ge25519_point,
-        unsigned char *ristretto255_point);
+        const unsigned char *ristretto255_point);
 
 SODIUM_EXPORT
 int crypto_sign_init(crypto_sign_state *state);

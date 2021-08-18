@@ -63,7 +63,7 @@ _crypto_sign_ed25519_verify_detached(const unsigned char *sig,
  */
 int crypto_sign_map_ristretto_prime_subgroup(
         unsigned char *ge25519_point,
-        unsigned char *ristretto255_point) {
+        const unsigned char *ristretto255_point) {
 
     ge25519_p3     point, point_torsion_safe;
     if (ristretto255_frombytes(&point, ristretto255_point) != 0) {

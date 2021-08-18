@@ -116,7 +116,7 @@ crypto_sign_final_verify(crypto_sign_state *state, const unsigned char *sig,
 
 int map_ristretto_prime_subgroup(
         unsigned char *ge25519_point,
-        unsigned char *ristretto255_point
+        const unsigned char *ristretto255_point
 ) {
     return crypto_sign_map_ristretto_prime_subgroup(ge25519_point, ristretto255_point);
 }
