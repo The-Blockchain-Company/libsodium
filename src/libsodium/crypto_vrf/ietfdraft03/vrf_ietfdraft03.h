@@ -50,10 +50,10 @@ void _vrf_ietfdraft03_hash_to_curve_elligator2_25519_blake(unsigned char H_strin
                                                       const unsigned char *alpha,
                                                       const unsigned long long alphalen);
 
-void _vrf_ietfdraft03_hash_to_curve_try_inc(unsigned char H_string[32],
-									   const ge25519_p3 *Y_point,
-									   const unsigned char *alpha,
-									   const unsigned long long alphalen);
+int _vrf_ietfdraft03_hash_to_curve_try_inc(unsigned char H_string[32],
+                                            const ge25519_p3 *Y_point,
+                                            const unsigned char *alpha,
+                                            const unsigned long long alphalen);
 
 void _vrf_ietfdraft03_hash_points(unsigned char c[16], const ge25519_p3 *P1,
 				  const ge25519_p3 *P2, const ge25519_p3 *P3,
