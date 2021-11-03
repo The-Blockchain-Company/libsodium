@@ -844,31 +844,31 @@ void point_precomputation(ge25519_cached cached[8], const ge25519_p3 *base) {
     ge25519_p3_dbl(&t, base);
     ge25519_p1p1_to_p3(&A, &t);
 
-    ge25519_add(&t, &A, &cached[0]);
+    ge25519_add_cached(&t, &A, &cached[0]);
     ge25519_p1p1_to_p3(&u, &t);
     ge25519_p3_to_cached(&cached[1], &u);
 
-    ge25519_add(&t, &A, &cached[1]);
+    ge25519_add_cached(&t, &A, &cached[1]);
     ge25519_p1p1_to_p3(&u, &t);
     ge25519_p3_to_cached(&cached[2], &u);
 
-    ge25519_add(&t, &A, &cached[2]);
+    ge25519_add_cached(&t, &A, &cached[2]);
     ge25519_p1p1_to_p3(&u, &t);
     ge25519_p3_to_cached(&cached[3], &u);
 
-    ge25519_add(&t, &A, &cached[3]);
+    ge25519_add_cached(&t, &A, &cached[3]);
     ge25519_p1p1_to_p3(&u, &t);
     ge25519_p3_to_cached(&cached[4], &u);
 
-    ge25519_add(&t, &A, &cached[4]);
+    ge25519_add_cached(&t, &A, &cached[4]);
     ge25519_p1p1_to_p3(&u, &t);
     ge25519_p3_to_cached(&cached[5], &u);
 
-    ge25519_add(&t, &A, &cached[5]);
+    ge25519_add_cached(&t, &A, &cached[5]);
     ge25519_p1p1_to_p3(&u, &t);
     ge25519_p3_to_cached(&cached[6], &u);
 
-    ge25519_add(&t, &A, &cached[6]);
+    ge25519_add_cached(&t, &A, &cached[6]);
     ge25519_p1p1_to_p3(&u, &t);
     ge25519_p3_to_cached(&cached[7], &u);
 }
@@ -913,18 +913,18 @@ ge25519_double_scalarmult_vartime_variable(ge25519_p2 *r, const unsigned char *a
 
         if (aslide[i] > 0) {
             ge25519_p1p1_to_p3(&u, &t);
-            ge25519_add(&t, &u, &Ai[aslide[i] / 2]);
+            ge25519_add_cached(&t, &u, &Ai[aslide[i] / 2]);
         } else if (aslide[i] < 0) {
             ge25519_p1p1_to_p3(&u, &t);
-            ge25519_sub(&t, &u, &Ai[(-aslide[i]) / 2]);
+            ge25519_sub_cached(&t, &u, &Ai[(-aslide[i]) / 2]);
         }
 
         if (bslide[i] > 0) {
             ge25519_p1p1_to_p3(&u, &t);
-            ge25519_add(&t, &u, &Bi[bslide[i] / 2]);
+            ge25519_add_cached(&t, &u, &Bi[bslide[i] / 2]);
         } else if (bslide[i] < 0) {
             ge25519_p1p1_to_p3(&u, &t);
-            ge25519_sub(&t, &u, &Bi[(-bslide[i]) / 2]);
+            ge25519_sub_cached(&t, &u, &Bi[(-bslide[i]) / 2]);
         }
 
         ge25519_p1p1_to_p2(r, &t);
@@ -990,20 +990,20 @@ ge25519_multi_scalarmult_vartime(ge25519_p2 *r, const unsigned char *scalars[32]
         for (j = 0; j < nr_base_point; j++) {
             if (scalar_slides[j * 256 + i] > 0) {
                 ge25519_p1p1_to_p3(&u, &t);
-                ge25519_madd(&t, &u, &Bi[scalar_slides[j * 256 + i] / 2]);
+                ge25519_add_precomp(&t, &u, &Bi[scalar_slides[j * 256 + i] / 2]);
             } else if (scalar_slides[j * 256 + i] < 0) {
                 ge25519_p1p1_to_p3(&u, &t);
-                ge25519_msub(&t, &u, &Bi[(-scalar_slides[j * 256 + i]) / 2]);
+                ge25519_sub_precomp(&t, &u, &Bi[(-scalar_slides[j * 256 + i]) / 2]);
             }
         }
 
         for (; j < size; j++) {
             if (scalar_slides[j * 256 + i] > 0) {
                 ge25519_p1p1_to_p3(&u, &t);
-                ge25519_add(&t, &u, &precomputed_bases[j * 8 + scalar_slides[j * 256 + i] / 2]);
+                ge25519_add_cached(&t, &u, &precomputed_bases[j * 8 + scalar_slides[j * 256 + i] / 2]);
             } else if (scalar_slides[j * 256 + i] < 0) {
                 ge25519_p1p1_to_p3(&u, &t);
-                ge25519_sub(&t, &u, &precomputed_bases[j * 8 + (-scalar_slides[j * 256 + i]) / 2]);
+                ge25519_sub_cached(&t, &u, &precomputed_bases[j * 8 + (-scalar_slides[j * 256 + i]) / 2]);
             }
         }
 
@@ -2811,7 +2811,7 @@ ge25519_xmont_to_ymont(fe25519 y, const fe25519 x)
 }
 
 /* multiply by the cofactor */
-static void
+void
 ge25519_clear_cofactor(ge25519_p3 *p3)
 {
     ge25519_p1p1 p1;

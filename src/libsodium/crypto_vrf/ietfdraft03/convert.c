@@ -26,6 +26,7 @@ SOFTWARE.
 #include "crypto_generichash.h"
 #include "crypto_vrf_ietfdraft03.h"
 #include "private/ed25519_ref10.h"
+#include "crypto_core_ed25519.h"
 #include "vrf_ietfdraft03.h"
 
 static const unsigned char ZERO = 0x00;
@@ -95,21 +96,22 @@ _vrf_ietfdraft03_hash_to_curve_elligator2_25519(unsigned char H_string[32],
 						const unsigned char *alpha,
 						const unsigned long long alphalen)
 {
-    crypto_hash_sha512_state hs;
-    unsigned char            Y_string[32], r_string[64];
-
-    _vrf_ietfdraft03_point_to_string(Y_string, Y_point);
-
-    /* r = first 32 bytes of SHA512(suite || 0x01 || Y || alpha) */
-    crypto_hash_sha512_init(&hs);
-    crypto_hash_sha512_update(&hs, &SUITE, 1);
-    crypto_hash_sha512_update(&hs, &ONE, 1);
-    crypto_hash_sha512_update(&hs, Y_string, 32);
-    crypto_hash_sha512_update(&hs, alpha, alphalen);
-    crypto_hash_sha512_final(&hs, r_string);
-
-    r_string[31] &= 0x7f; /* clear sign bit */
-    ge25519_from_uniform(H_string, r_string); /* elligator2 */
+//    crypto_hash_sha512_state hs;
+//    unsigned char            Y_string[32], r_string[64];
+//
+//    _vrf_ietfdraft03_point_to_string(Y_string, Y_point);
+//
+//    /* r = first 32 bytes of SHA512(suite || 0x01 || Y || alpha) */
+//    crypto_hash_sha512_init(&hs);
+//    crypto_hash_sha512_update(&hs, &SUITE, 1);
+//    crypto_hash_sha512_update(&hs, &ONE, 1);
+//    crypto_hash_sha512_update(&hs, Y_string, 32);
+//    crypto_hash_sha512_update(&hs, alpha, alphalen);
+//    crypto_hash_sha512_final(&hs, r_string);
+//
+//    r_string[31] &= 0x7f; /* clear sign bit */
+//    ge25519_from_uniform(H_string, r_string); /* elligator2 */
+    crypto_core_ed25519_from_string(H_string, "QUUX-V01-CS02-with-edwards25519_XMD:SHA-512_ELL2_RO_", alpha, alphalen, 2);
 }
 
 /*
@@ -139,7 +141,7 @@ _vrf_ietfdraft03_hash_to_curve_try_inc(unsigned char H_string[32],
         crypto_hash_sha512_final(&hs, r_string);
 
         if (ge25519_frombytes(&p3, r_string) == 0) {
-            multiply_by_cofactor(&p3);
+            ge25519_clear_cofactor(&p3);
             ge25519_p3_tobytes(H_string, &p3);
             return 0;
         };

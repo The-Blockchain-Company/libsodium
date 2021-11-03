@@ -58,7 +58,7 @@ crypto_vrf_ietfdraft03_proof_to_hash(unsigned char beta[crypto_vrf_ietfdraft03_O
     /* beta_string = Hash(suite_string || three_string || point_to_string(cofactor * Gamma)) */
     hash_input[0] = SUITE;
     hash_input[1] = THREE;
-    multiply_by_cofactor(&Gamma_point);
+    ge25519_clear_cofactor(&Gamma_point);
     _vrf_ietfdraft03_point_to_string(hash_input+2, &Gamma_point);
     crypto_hash_sha512(beta, hash_input, sizeof hash_input);
 
@@ -87,7 +87,7 @@ crypto_vrf_ietfdraft03_proof_to_hash_batch_compatible(unsigned char beta[crypto_
     /* beta_string = Hash(suite_string || three_string || point_to_string(cofactor * Gamma)) */
     hash_input[0] = SUITE;
     hash_input[1] = THREE;
-    multiply_by_cofactor(&Gamma_point);
+    ge25519_clear_cofactor(&Gamma_point);
     _vrf_ietfdraft03_point_to_string(hash_input+2, &Gamma_point);
     crypto_hash_sha512(beta, hash_input, sizeof hash_input);
 
@@ -113,7 +113,7 @@ crypto_vrf_ietfdraft03_proof_to_hash_blake(unsigned char beta[crypto_vrf_ietfdra
     /* beta_string = Hash(suite_string || three_string || point_to_string(cofactor * Gamma)) */
     hash_input[0] = SUITE;
     hash_input[1] = THREE;
-    multiply_by_cofactor(&Gamma_point);
+    ge25519_clear_cofactor(&Gamma_point);
     _vrf_ietfdraft03_point_to_string(hash_input+2, &Gamma_point);
     crypto_generichash(beta, crypto_vrf_ietfdraft03_OUTPUTBYTES, hash_input, sizeof hash_input, NULL, 0);
 
@@ -192,14 +192,14 @@ vrf_verify(const ge25519_p3 *Y_point, const unsigned char pi[80],
     ge25519_scalarmult(&tmp_p3_point, c_scalar, Y_point); /* tmp_p3 = c*Y */
     ge25519_p3_to_cached(&tmp_cached_point, &tmp_p3_point); /* tmp_cached = c*Y */
     ge25519_scalarmult_base(&tmp_p3_point, s_scalar); /* tmp_p3 = s*B */
-    ge25519_sub(&tmp_p1p1_point, &tmp_p3_point, &tmp_cached_point); /* tmp_p1p1 = tmp_p3 - tmp_cached = s*B - c*Y */
+    ge25519_sub_cached(&tmp_p1p1_point, &tmp_p3_point, &tmp_cached_point); /* tmp_p1p1 = tmp_p3 - tmp_cached = s*B - c*Y */
     ge25519_p1p1_to_p3(&U_point, &tmp_p1p1_point); /* U = s*B - c*Y */
 
     /* calculate V = s*H -  c*Gamma */
     ge25519_scalarmult(&tmp_p3_point, c_scalar, &Gamma_point); /* tmp_p3 = c*Gamma */
     ge25519_p3_to_cached(&tmp_cached_point, &tmp_p3_point); /* tmp_cached = c*Gamma */
     ge25519_scalarmult(&tmp_p3_point, s_scalar, &H_point); /* tmp_p3 = s*H */
-    ge25519_sub(&tmp_p1p1_point, &tmp_p3_point, &tmp_cached_point); /* tmp_p1p1 = tmp_p3 - tmp_cached = s*H - c*Gamma */
+    ge25519_sub_cached(&tmp_p1p1_point, &tmp_p3_point, &tmp_cached_point); /* tmp_p1p1 = tmp_p3 - tmp_cached = s*H - c*Gamma */
     ge25519_p1p1_to_p3(&V_point, &tmp_p1p1_point); /* V = s*H - c*Gamma */
 
     _vrf_ietfdraft03_hash_points(cprime, &H_point, &Gamma_point, &U_point, &V_point);

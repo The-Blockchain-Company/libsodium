@@ -110,6 +110,12 @@ SODIUM_EXPORT
 double time_per_proof(const unsigned int size);
 
 SODIUM_EXPORT
+void try_and_increment(unsigned char result[32], unsigned char pk[32], const unsigned char *alpha, unsigned long long alphalen);
+
+SODIUM_EXPORT
+void elligator_hash_to_group(unsigned char result[32], unsigned char pk[32], const unsigned char *alpha, unsigned long long alphalen);
+
+SODIUM_EXPORT
 int internal_scalarmul(unsigned char *point, const unsigned char *scalar);
 
 // Verify a VRF proof (for a given a public key and message) and validate the

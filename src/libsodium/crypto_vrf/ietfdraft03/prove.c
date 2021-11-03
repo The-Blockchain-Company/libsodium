@@ -104,6 +104,37 @@ vrf_nonce_generation_blake(unsigned char k_scalar[32],
     sodium_memzero(k_string, sizeof k_string);
 }
 
+void try_and_increment(unsigned char result[32], unsigned char pk[32], const unsigned char *alpha, unsigned long long alphalen) {
+    ge25519_p3 p3;
+    unsigned char r_string[64];
+    int check = 128;
+    unsigned char value = 0x00;
+    while (check > 0) {
+        crypto_hash_sha512_state hs;
+        crypto_hash_sha512_init(&hs);
+        crypto_hash_sha512_update(&hs, &SUITE, 1);
+        crypto_hash_sha512_update(&hs, pk, 32);
+        crypto_hash_sha512_update(&hs, alpha, alphalen);
+        crypto_hash_sha512_update(&hs, &value, 1);
+        crypto_hash_sha512_final(&hs, r_string);
+
+        if (ge25519_frombytes(&p3, r_string) == 0) {
+            ge25519_clear_cofactor(&p3);
+            ge25519_p3_tobytes(result, &p3);
+            return;
+        };
+
+        value += 0x01;
+        check -= 1;
+    }
+
+    return;
+}
+
+void elligator_hash_to_group(unsigned char result[32], unsigned char pk[32], const unsigned char *alpha, unsigned long long alphalen) {
+    crypto_core_ed25519_from_string(result, "QUUX-V01-CS02-with-edwards25519_XMD:SHA-512_ELL2_RO_", alpha, alphalen, 2);
+}
+
 double time_per_proof(const unsigned int size) {
     // for random point gen
     unsigned char x[crypto_core_ed25519_UNIFORMBYTES];
