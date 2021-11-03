@@ -27,6 +27,7 @@ EXTRA_DIST = \
 	chacha20.exp \
 	codecs.exp \
 	core_ed25519.exp \
+	core_ed25519_h2c.exp \
 	core_ristretto255.exp \
 	core1.exp \
 	core2.exp \
@@ -110,6 +111,7 @@ DISTCLEANFILES = \
 	chacha20.res \
 	codecs.res \
 	core_ed25519.res \
+	core_ed25519_h2c.res \
 	core_ristretto255.res \
 	core1.res \
 	core2.res \
@@ -333,6 +335,9 @@ codecs_LDADD              = $(TESTS_LDADD)
 core_ed25519_SOURCE       = cmptest.h core_ed25519.c
 core_ed25519_LDADD        = $(TESTS_LDADD)
 
+core_ed25519_h2c_SOURCE   = cmptest.h core_ed25519_h2c.c
+core_ed25519_h2c_LDADD    = $(TESTS_LDADD)
+
 core_ristretto255_SOURCE  = cmptest.h core_ristretto255.c
 core_ristretto255_LDADD   = $(TESTS_LDADD)
 
@@ -507,6 +512,7 @@ xchacha20_LDADD           = $(TESTS_LDADD)
 if !MINIMAL
 TESTS_TARGETS += \
 	core_ed25519 \
+	core_ed25519_h2c \
 	core_ristretto255 \
 	pwhash_scrypt \
 	pwhash_scrypt_ll \

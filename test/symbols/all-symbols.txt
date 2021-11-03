@@ -32,6 +32,7 @@ blake2b_long
 blake2b_pick_best_implementation
 blake2b_salt_personal
 blake2b_update
+core_h2c_string_to_hash
 crypto_aead_aegis256_abytes
 crypto_aead_aegis256_decrypt
 crypto_aead_aegis256_decrypt_detached
@@ -190,6 +191,8 @@ crypto_box_seedbytes
 crypto_box_zerobytes
 crypto_core_ed25519_add
 crypto_core_ed25519_bytes
+crypto_core_ed25519_from_string
+crypto_core_ed25519_from_string_ro
 crypto_core_ed25519_from_hash
 crypto_core_ed25519_from_uniform
 crypto_core_ed25519_hashbytes

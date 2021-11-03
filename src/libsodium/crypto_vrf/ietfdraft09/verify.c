@@ -146,7 +146,7 @@ vrf_verify(const ge25519_p3 *Y_point, const unsigned char pi[128],
      * improvements are still noticeable
      */
     if (_vrf_ietfdraft09_hash_to_curve_try_inc(h_string, Y_point, alpha, alphalen) != 0) {
-        _vrf_ietfdraft03_hash_to_curve_elligator2_25519(h_string, Y_point, alpha, alphalen);
+        _vrf_ietfdraft09_hash_to_curve_elligator2_25519(h_string, Y_point, alpha, alphalen);
     };
     ge25519_frombytes(&H_point, h_string);
 
