@@ -2741,7 +2741,7 @@ ge25519_xmont_to_ymont(fe25519 y, const fe25519 x)
 
     fe25519_sq(x2, x);
     fe25519_mul(x3, x, x2);
-    fe25519_mul32(x2, x2, ed25519_A_32);
+    fe25519_scalar_product(x2, x2, ed25519_A_32);
     fe25519_add(y, x3, x);
     fe25519_add(y, y, x2);
 
@@ -2775,12 +2775,12 @@ ge25519_elligator2(fe25519 x, fe25519 y, const fe25519 r, int *notsquare_p)
     fe25519_sq2(rr2, r);
     rr2[0]++;
     fe25519_invert(rr2, rr2);
-    fe25519_mul32(x, rr2, ed25519_A_32);
+    fe25519_scalar_product(x, rr2, ed25519_A_32);
     fe25519_neg(x, x); /* x=x1 */
 
     fe25519_sq(x2, x);
     fe25519_mul(x3, x, x2);
-    fe25519_mul32(x2, x2, ed25519_A_32); /* x2 = A*x1^2 */
+    fe25519_scalar_product(x2, x2, ed25519_A_32); /* x2 = A*x1^2 */
     fe25519_add(gx1, x3, x);
     fe25519_add(gx1, gx1, x2); /* gx1 = x1^3 + A*x1^2 + x1 */
 
